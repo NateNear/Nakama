@@ -48,6 +48,20 @@ export function useNakama(): NakamaHook {
   const [myStats, setMyStats] = useState<PlayerStats | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const parseRpcPayload = useCallback(<T,>(payload: unknown, fallback: T): T => {
+    try {
+      if (payload == null) return fallback;
+      if (typeof payload === 'string') {
+        const s = payload.trim();
+        return (s ? (JSON.parse(s) as T) : fallback);
+      }
+      if (typeof payload === 'object') return payload as T;
+      return fallback;
+    } catch {
+      return fallback;
+    }
+  }, []);
+
   // Initialize Nakama client
   useEffect(() => {
     clientRef.current = new Client(SERVER_KEY, NAKAMA_HOST, NAKAMA_PORT, NAKAMA_USE_SSL);
@@ -139,7 +153,7 @@ export function useNakama(): NakamaHook {
       sessionRef.current = session;
 
       // Update display name via account update
-      await client.updateAccount(session, { displayName: username });
+      await client.updateAccount(session, { display_name: username });
 
       // Connect socket
       const socket = setupSocket(session);
@@ -171,8 +185,8 @@ export function useNakama(): NakamaHook {
 
   const refreshMyStatsInternal = async (client: Client, session: Session) => {
     try {
-      const result = await client.rpcGet(session, 'get_my_stats', '');
-      const stats = JSON.parse(result.payload || '{}');
+      const result = await client.rpc(session, 'get_my_stats', {});
+      const stats = parseRpcPayload<PlayerStats | null>(result.payload, null);
       setMyStats(stats);
     } catch (e) {
       console.error('Failed to load stats:', e);
@@ -206,32 +220,32 @@ export function useNakama(): NakamaHook {
     if (!clientRef.current || !sessionRef.current) throw new Error('Not connected');
     setError(null);
 
-    const result = await clientRef.current.rpcGet(
+    const result = await clientRef.current.rpc(
       sessionRef.current,
       'create_match',
-      JSON.stringify({ timerMode })
+      { timerMode }
     );
-    const { matchId: newMatchId } = JSON.parse(result.payload || '{}');
+    const { matchId: newMatchId } = parseRpcPayload<{ matchId?: string }>(result.payload, {});
     if (!newMatchId) throw new Error('Failed to create match');
 
     await joinMatchById(newMatchId);
     return newMatchId;
-  }, [joinMatchById]);
+  }, [joinMatchById, parseRpcPayload]);
 
   const findOrCreateMatch = useCallback(async (timerMode: boolean) => {
     if (!clientRef.current || !sessionRef.current) throw new Error('Not connected');
     setError(null);
 
-    const result = await clientRef.current.rpcGet(
+    const result = await clientRef.current.rpc(
       sessionRef.current,
       'find_or_create_match',
-      JSON.stringify({ timerMode })
+      { timerMode }
     );
-    const { matchId: newMatchId } = JSON.parse(result.payload || '{}');
+    const { matchId: newMatchId } = parseRpcPayload<{ matchId?: string }>(result.payload, {});
     if (!newMatchId) throw new Error('Matchmaking failed');
 
     await joinMatchById(newMatchId);
-  }, [joinMatchById]);
+  }, [joinMatchById, parseRpcPayload]);
 
   const sendMove = useCallback((position: number) => {
     if (!socketRef.current || !matchIdRef.current) return;
@@ -259,14 +273,14 @@ export function useNakama(): NakamaHook {
   const getLeaderboard = useCallback(async (): Promise<LeaderboardEntry[]> => {
     if (!clientRef.current || !sessionRef.current) return [];
     try {
-      const result = await clientRef.current.rpcGet(sessionRef.current, 'get_leaderboard', '');
-      const { records } = JSON.parse(result.payload || '{"records":[]}');
+      const result = await clientRef.current.rpc(sessionRef.current, 'get_leaderboard', {});
+      const { records } = parseRpcPayload<{ records?: LeaderboardEntry[] }>(result.payload, { records: [] });
       return records || [];
     } catch (e) {
       console.error('getLeaderboard error:', e);
       return [];
     }
-  }, []);
+  }, [parseRpcPayload]);
 
   return {
     client: clientRef.current,

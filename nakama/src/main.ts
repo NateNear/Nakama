@@ -413,7 +413,7 @@ const rpcFindOrCreateMatch: nkruntime.RpcFunction = (ctx, logger, nk, payload) =
   return JSON.stringify({ matchId });
 };
 
-const rpcGetLeaderboard: nkruntime.RpcFunction = (ctx, logger, nk, _payload) => {
+const rpcLeaderboard: nkruntime.RpcFunction = (ctx, logger, nk, _payload) => {
   try {
     const result = nk.leaderboardRecordsList(LEADERBOARD_ID, [], 20, undefined, undefined);
     const records = (result.records || []).map((r: any) => ({
@@ -425,12 +425,12 @@ const rpcGetLeaderboard: nkruntime.RpcFunction = (ctx, logger, nk, _payload) => 
     }));
     return JSON.stringify({ records });
   } catch (e) {
-    logger.error('rpcGetLeaderboard error: %s', e);
+    logger.error('rpcLeaderboard error: %s', e);
     return JSON.stringify({ records: [] });
   }
 };
 
-const rpcGetMyStats: nkruntime.RpcFunction = (ctx, logger, nk, _payload) => {
+const rpcMyStats: nkruntime.RpcFunction = (ctx, logger, nk, _payload) => {
   if (!ctx.userId) return JSON.stringify({ error: 'Not authenticated' });
   try {
     const objs = nk.storageRead([{ collection: STORAGE_COLLECTION, key: 'stats', userId: ctx.userId }]);
@@ -439,7 +439,7 @@ const rpcGetMyStats: nkruntime.RpcFunction = (ctx, logger, nk, _payload) => {
     }
     return (objs[0] as any).value;
   } catch (e) {
-    logger.error('rpcGetMyStats error: %s', e);
+    logger.error('rpcMyStats error: %s', e);
     return JSON.stringify({ wins: 0, losses: 0, draws: 0, currentStreak: 0, maxStreak: 0 });
   }
 };
@@ -473,8 +473,8 @@ function InitModule(
   // Register RPC endpoints
   initializer.registerRpc('create_match', rpcCreateMatch);
   initializer.registerRpc('find_or_create_match', rpcFindOrCreateMatch);
-  initializer.registerRpc('get_leaderboard', rpcGetLeaderboard);
-  initializer.registerRpc('get_my_stats', rpcGetMyStats);
+  initializer.registerRpc('get_leaderboard', rpcLeaderboard);
+  initializer.registerRpc('get_my_stats', rpcMyStats);
 
   logger.info('TicTacToe module initialized successfully');
 }
