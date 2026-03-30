@@ -1,0 +1,13 @@
+{
+  "name": "tictactoe-nakama",
+  "version": "1.0.0",
+  "description": "Nakama server-side TypeScript module for multiplayer Tic-Tac-Toe",
+  "scripts": {
+    "build": "npx tsc",
+    "watch": "npx tsc --watch"
+  },
+  "devDependencies": {
+    "nakama-runtime": "github:heroiclabs/nakama-common#master",
+    "typescript": "^5.3.3"
+  }
+}

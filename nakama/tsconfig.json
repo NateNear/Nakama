@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["es5", "es2015.collection", "es2015.symbol", "es2015.iterable", "es2015.generator"],
+    "typeRoots": ["./node_modules"],
+    "outFile": "./dist/index.js",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "files": ["./src/main.ts"],
+  "exclude": ["node_modules"]
+}

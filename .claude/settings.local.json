@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /c/Users/Harindra.Reddy/Desktop/assignment/nakama/src)",
+      "Bash(mkdir -p /c/Users/Harindra.Reddy/Desktop/assignment/frontend/src/components)",
+      "Bash(mkdir -p /c/Users/Harindra.Reddy/Desktop/assignment/frontend/src/hooks)",
+      "Bash(mkdir -p /c/Users/Harindra.Reddy/Desktop/assignment/frontend/public)",
+      "Bash(curl -fsSL \"https://raw.githubusercontent.com/heroiclabs/nakama-common/master/runtime/runtime.d.ts\" -o /c/Users/Harindra.Reddy/Desktop/assignment/nakama/@heroiclabs/nakama-runtime/index.d.ts)",
+      "Bash(curl -fsSL \"https://raw.githubusercontent.com/heroiclabs/nakama-common/main/runtime/runtime.d.ts\" -o /tmp/runtime.d.ts)",
+      "Bash(curl -fsSL \"https://api.github.com/repos/heroiclabs/nakama-common/contents/\")",
+      "Bash(curl -fsSL \"https://api.github.com/repos/heroiclabs/nakama-common/contents/runtime\")",
+      "Bash(curl -fsSL \"https://api.github.com/repos/heroiclabs/nakama/contents/\")",
+      "Bash(curl -fsSL \"https://api.github.com/repos/heroiclabs/nakama/contents/data\")",
+      "Bash(curl -fsSL \"https://api.github.com/repos/heroiclabs/nakama/contents/data/modules\")",
+      "Bash(curl:*)",
+      "Bash(python3 -c \"import sys,json; [print\\(x[''''name'''']\\) for x in json.load\\(sys.stdin\\)]\")",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)"
+    ]
+  }
+}
