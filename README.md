@@ -107,53 +107,17 @@ npm start                       # http://localhost:3000
 
 ## Deployment
 
-### Option A — DigitalOcean Droplet (recommended for demo)
+### Live Deployment
 
-```bash
-# 1. Provision a $6/mo Droplet (Ubuntu 22.04, 1 vCPU, 1 GB RAM)
-# 2. SSH in and install Docker
-curl -fsSL https://get.docker.com | sh
-apt-get install -y docker-compose-plugin
+| Service | Platform | URL |
+|---|---|---|
+| **Frontend** | Vercel | https://nakama-omega.vercel.app/ |
+| **Backend (Nakama)** | Render | https://nakama-lpa8.onrender.com |
 
-# 3. Clone repo
-git clone <your-repo-url> /opt/tictactoe && cd /opt/tictactoe
-
-# 4. Build Nakama module
-cd nakama && npm install && npm run build && cd ..
-
-# 5. Set your domain / IP in frontend env
-export NAKAMA_PUBLIC_HOST=<YOUR_SERVER_IP_OR_DOMAIN>
-
-# 6. Build frontend with production Nakama host
-docker build \
-  --build-arg REACT_APP_NAKAMA_HOST=$NAKAMA_PUBLIC_HOST \
-  --build-arg REACT_APP_NAKAMA_PORT=7350 \
-  --build-arg REACT_APP_NAKAMA_SSL=false \
-  -t ttt-frontend ./frontend
-
-# 7. Start all services
-docker-compose up -d
-```
-
-The frontend will be accessible on port **3000** and Nakama on **7350**.
-
-### Option B — AWS EC2 / GCP Compute Engine
-
-Follow the same steps as Option A. Ensure the following ports are open in your security group / firewall:
-- `3000` — frontend
-- `7350` — Nakama HTTP + WebSocket
-- `7349` — Nakama gRPC (optional)
-
-### Option C — Deploying frontend to Vercel/Netlify
-
-```bash
-# Build with the deployed Nakama URL
-REACT_APP_NAKAMA_HOST=<nakama-server-ip> npm run build
-# Upload the `build/` folder to Vercel / Netlify
-```
+The backend (Nakama game server + PostgreSQL) is hosted on **Render** and the frontend (React SPA) is deployed on **Vercel**.
 
 ### Nakama Console
-After deployment, visit `http://<HOST>:7351` (default credentials: `admin` / `password`) to:
+After deployment, visit `https://<RENDER_SERVICE_URL>:7351` (default credentials: `admin` / `password`) to:
 - Inspect active matches
 - View leaderboard records
 - Monitor storage objects
