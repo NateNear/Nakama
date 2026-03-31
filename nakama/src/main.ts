@@ -437,7 +437,7 @@ const rpcMyStats: nkruntime.RpcFunction = (ctx, logger, nk, _payload) => {
     if (objs.length === 0) {
       return JSON.stringify({ wins: 0, losses: 0, draws: 0, currentStreak: 0, maxStreak: 0 });
     }
-    return (objs[0] as any).value;
+    return JSON.stringify((objs[0] as any).value);
   } catch (e) {
     logger.error('rpcMyStats error: %s', e);
     return JSON.stringify({ wins: 0, losses: 0, draws: 0, currentStreak: 0, maxStreak: 0 });
