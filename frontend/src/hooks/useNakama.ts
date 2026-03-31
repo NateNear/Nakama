@@ -169,6 +169,7 @@ export function useNakama(): NakamaHook {
       setError(e.message || 'Login failed');
       throw e;
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setupSocket]);
 
   const logout = useCallback(() => {
@@ -196,6 +197,7 @@ export function useNakama(): NakamaHook {
   const refreshMyStats = useCallback(async () => {
     if (!clientRef.current || !sessionRef.current) return;
     await refreshMyStatsInternal(clientRef.current, sessionRef.current);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const joinMatchById = useCallback(async (id: string) => {

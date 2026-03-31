@@ -28,6 +28,7 @@ const Game: React.FC<GameProps> = ({
   onLeave,
   onPlayAgain,
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const mySymbol = gameState?.players[myUserId]?.symbol;
   const isMyTurn = gameState?.currentTurnUserId === myUserId;
   const opponent = gameState
